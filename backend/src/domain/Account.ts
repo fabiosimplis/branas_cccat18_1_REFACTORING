@@ -1,4 +1,3 @@
-import crypto from "crypto";
 import CarPlate from "./CarPlate";
 import Cpf from "./Cpf";
 import Email from "./Email";
@@ -7,6 +6,7 @@ import Password from "./Password";
 import UUID from "./UUID";
 
 // Design Pattern - Facade, expoe um interface mais simples, delegando a complexidade interna para outros responsáveis
+// Entity
 export default class Account {
   private accountId: UUID;
   private name: Name;
