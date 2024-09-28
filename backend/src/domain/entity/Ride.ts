@@ -1,5 +1,5 @@
-import UUID from "./UUID";
-import Coord from "./Coord"
+import UUID from "./vo/UUID";
+import Coord from "./vo/Coord"
 
 export default class Ride {
   private rideId: UUID

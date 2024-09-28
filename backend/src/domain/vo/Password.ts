@@ -1,3 +1,5 @@
+// Entity Clean Architecture
+// Value Object DDD
 export default class Password {
   private value: string;
 

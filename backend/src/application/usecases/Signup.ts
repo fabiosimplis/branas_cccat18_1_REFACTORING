@@ -1,4 +1,4 @@
-import Account from "../../domain/Account";
+import Account from "../../domain/entity/Account";
 import { inject } from "../../infra/DI/DI";
 import AccountRepository from "../../infra/Repository/AccountRepository";
 

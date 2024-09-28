@@ -1,3 +1,4 @@
+// Value Object DDD
 export default class Coor {
   private lat: number;
   private long: number;

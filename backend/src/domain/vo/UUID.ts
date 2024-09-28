@@ -1,5 +1,6 @@
 import crypto from "crypto";
 
+// Value Object DDD
 export default class UUID {
   value: string;
 

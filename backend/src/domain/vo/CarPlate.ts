@@ -1,4 +1,5 @@
-// Entity
+// Entity Clean Architecture
+// VO DDD
 export default class CarPlate {
   private value: string;
 
