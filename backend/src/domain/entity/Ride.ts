@@ -35,10 +35,6 @@ export default class Ride {
     return this.driverId?.getValue()
   }
 
-  setDriverId(newDriverId: string){
-    this.driverId = new UUID(newDriverId);
-  }
-
   getPassengerId () {
     return this.passengerId.getValue()
   }
@@ -50,13 +46,15 @@ export default class Ride {
   getTo () {
     return this.to;
   }
-
+  
   getStatus () {
     return this.status;
   }
 
-  setStatus(newStatus: string){
-    this.status = newStatus;
+  accept (driverId: string) {
+    if (this.getStatus() !== "requested") throw new Error("Invalid status");
+    this.status = "accepted";
+    this.driverId = new UUID(driverId);
   }
 
   getDate () {

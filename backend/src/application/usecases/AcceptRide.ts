@@ -19,8 +19,7 @@ export default class RequestRide {
     if(!account.isDriver) throw new Error("Account must be from a driver");
     const ride = await this.rideRepository?.getRideById(input.rideId);
     if (!ride) throw new Error("Ride does not exist");
-    ride.setStatus("accepted");
-    ride.setDriverId(input.driverId);
+    ride.accept(input.driverId);
     await this.rideRepository?.updateRide(ride);
   }
 }
