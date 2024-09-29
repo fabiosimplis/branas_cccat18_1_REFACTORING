@@ -1,5 +1,6 @@
 import UUID from "../vo/UUID";
 import Coord from "../vo/Coord"
+import RideStatus, { RideStatusFactory } from "../vo/RideStatus";
 
 export default class Ride {
   private rideId: UUID;
@@ -7,7 +8,7 @@ export default class Ride {
   private passengerId: UUID;
   private from: Coord;
   private to: Coord;
-  private status: string;
+  private status: RideStatus;
   private date: Date;
 
   constructor (rideId: string, passengerId: string, fromLat: number, fromLong: number, toLat: number, toLong: number, status: string, date: Date, driverId: string = "") {
@@ -15,7 +16,7 @@ export default class Ride {
       this.passengerId = new UUID(passengerId);
       this.from = new Coord(fromLat, fromLong);
       this.to = new Coord(toLat, toLong);
-      this.status = status;
+      this.status = RideStatusFactory.create(status, this);
       this.date = date;
       if (driverId) this.driverId = new UUID(driverId);
   }
@@ -48,13 +49,20 @@ export default class Ride {
   }
   
   getStatus () {
-    return this.status;
+    return this.status.value;
+  }
+
+  setStatus (status: RideStatus) {
+    this.status = status;
   }
 
   accept (driverId: string) {
-    if (this.getStatus() !== "requested") throw new Error("Invalid status");
-    this.status = "accepted";
+    this.status.accept();
     this.driverId = new UUID(driverId);
+  }
+
+  start () {
+    this.status.start();
   }
 
   getDate () {
