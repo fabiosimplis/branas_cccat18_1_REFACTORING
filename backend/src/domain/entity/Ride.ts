@@ -12,10 +12,8 @@ export default class Ride {
   private to: Coord;
   private status: RideStatus;
   private date: Date;
-  // Entity
-  positions: Position[];
 
-  constructor (rideId: string, passengerId: string, fromLat: number, fromLong: number, toLat: number, toLong: number, status: string, date: Date, driverId: string = "", positions: Position[]) {
+  constructor (rideId: string, passengerId: string, fromLat: number, fromLong: number, toLat: number, toLong: number, status: string, date: Date, driverId: string = "") {
       this.rideId = new UUID(rideId);
       this.passengerId = new UUID(passengerId);
       this.from = new Coord(fromLat, fromLong);
@@ -23,15 +21,13 @@ export default class Ride {
       this.status = RideStatusFactory.create(status, this);
       this.date = date;
       if (driverId) this.driverId = new UUID(driverId);
-      this.positions = positions;
   }
 
   static create(passengerId: string, fromLat: number, fromLong: number, toLat: number, toLong: number) {
     const uuid = UUID.create();
     const status = "requested"; 
     const date = new Date();
-    const positions: Position[] = [];
-    return new Ride(uuid.getValue(), passengerId, fromLat, fromLong, toLat, toLong, status, date, "", positions);
+    return new Ride(uuid.getValue(), passengerId, fromLat, fromLong, toLat, toLong, status, date, "");
   }
 
   getRideId () {
@@ -75,28 +71,13 @@ export default class Ride {
     return this.date;
   }
 
-  updatePosition (lat: number, long: number){
-    this.positions.push(Position.create(this.rideId.getValue(), lat, long));
-  }
-
-  getDistance () {
+  getDistance (positions: Position[]) {
     let distance = 0;
-    for (const [index, position] of this.positions.entries()) {
-      const nextPosition = this.positions[index + 1];
+    for (const [index, position] of positions.entries()) {
+      const nextPosition = positions[index + 1];
       if (!nextPosition) continue;
       distance += DistanceCalculator.calculate(position.coord, nextPosition.coord);
     }
     return distance;
   }
-
-  // updatePositionCoord (positionId: string, lat: number, long: number) {
-  //   const position = this.positions.find((position: Position) => position.positionId.getValue() === positionId);
-  //   if (!position) return;
-  //   position.setCoord(lat, long);
-  // }
-
-  // deletePosition (positionId: string) {
-  //   this.positions = this.positions.filter((position: Position) => position.positionId.getValue() !== positionId);
-  // }
-
 }

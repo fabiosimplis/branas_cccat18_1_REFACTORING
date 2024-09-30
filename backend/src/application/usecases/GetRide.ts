@@ -1,4 +1,5 @@
 import { inject } from "../../infra/DI/DI";
+import PositionRepository from "../../infra/Repository/PositionRepository";
 import RideRepository from "../../infra/Repository/RideRepository";
 
 
@@ -6,13 +7,17 @@ import RideRepository from "../../infra/Repository/RideRepository";
 export default class GetRide {
   @inject("rideRepository")
   rideRepository?: RideRepository;
+  @inject("positionRepository")
+  positionRepository?: PositionRepository;
 
   // Dependency Inversion Principle - Dependency Injection
   async execute(rideId: string): Promise<Output>{
     
     // Orquestrando recursos
     const ride = await this.rideRepository?.getRideById(rideId);
-    if (!ride) throw new Error("Ride not Found")
+    if (!ride) throw new Error("Ride not Found");
+    const positions = await this.positionRepository?.getPositionsByRideId(rideId);
+    const distance = ride.getDistance(positions || []);
     return {
       rideId: ride.getRideId(),
       passengerId: ride.getPassengerId(),
@@ -23,8 +28,8 @@ export default class GetRide {
       status: ride.getStatus(),
       date: ride.getDate(),
       driverId: ride.getDriverId(),
-      positions: ride.positions,
-      distance: ride.getDistance()
+      positions: positions || [],
+      distance: distance
     }
   }
 }

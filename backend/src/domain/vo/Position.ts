@@ -1,7 +1,7 @@
 import Coord from "./Coord";
 import UUID from "./UUID";
 
-// Entity DDD
+// Aggregate
 export default class Position {
   positionId: UUID;
   rideId: UUID;
@@ -19,7 +19,7 @@ export default class Position {
     return new Position(positionId, rideId, lat, long, date);
   }
 
-  // setCoord (lat: number, long: number) {
-  //   this.coord = new Coord(lat, long);
-  // }
+  setCoord (lat: number, long: number) {
+    this.coord = new Coord(lat, long);
+  }
 }
