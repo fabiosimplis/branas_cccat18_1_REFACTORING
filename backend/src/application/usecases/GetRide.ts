@@ -22,7 +22,9 @@ export default class GetRide {
       toLong: ride.getTo().getLong(),
       status: ride.getStatus(),
       date: ride.getDate(),
-      driverId: ride.getDriverId()
+      driverId: ride.getDriverId(),
+      positions: ride.positions,
+      distance: ride.getDistance()
     }
   }
 }
@@ -36,5 +38,7 @@ type Output = {
   toLong: number,
   status: string,
   date: Date,
-  driverId?: string
+  driverId?: string,
+  positions: any[],
+  distance: number
 }
