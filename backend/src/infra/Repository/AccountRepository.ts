@@ -1,6 +1,6 @@
 import DatabaseConnection from "../database/DataBaseConnection";
 import { inject } from "../DI/DI";
-import Account from "../../domain/Account"
+import Account from "../../domain/entity/Account"
 
 
 // Port

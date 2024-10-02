@@ -1,12 +1,13 @@
-import CarPlate from "./CarPlate";
-import Cpf from "./Cpf";
-import Email from "./Email";
-import Name from "./Name";
-import Password from "./Password";
-import UUID from "./UUID";
+import CarPlate from "../vo/CarPlate";
+import Cpf from "../vo/Cpf";
+import Email from "../vo/Email";
+import Name from "../vo/Name";
+import Password from "../vo/Password";
+import UUID from "../vo/UUID";
 
 // Design Pattern - Facade, expoe um interface mais simples, delegando a complexidade interna para outros responsáveis
-// Entity
+// Entity Clean Architecture
+// Entity DDD
 export default class Account {
   private accountId: UUID;
   private name: Name;
@@ -52,5 +53,9 @@ export default class Account {
 
   getPassword(){
     return this.password.getValue();
+  }
+
+  changePassword ( newPassword: string) {
+    this.password = new Password(newPassword);
   }
 }
