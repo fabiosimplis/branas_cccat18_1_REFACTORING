@@ -7,6 +7,7 @@ import Signup from "../src/application/usecases/Signup";
 import { PgPromiseAdapter } from "../src/infra/database/DataBaseConnection";
 import { Registry } from "../src/infra/DI/DI";
 import { AccountRepositoryDatabase } from "../src/infra/Repository/AccountRepository";
+import { PositionRepositoryDatebase } from "../src/infra/Repository/PositionRepository";
 import { RideRepositoryDataBase } from "../src/infra/Repository/RideRepository";
 
 let signup: Signup;
@@ -18,6 +19,7 @@ beforeEach(() => {
   Registry.getInstance().provide("databaseConnection", new PgPromiseAdapter());
   Registry.getInstance().provide("accountRepository", new AccountRepositoryDatabase());
   Registry.getInstance().provide("rideRepository", new RideRepositoryDataBase());
+  Registry.getInstance().provide("positionRepository", new PositionRepositoryDatebase());
   signup = new Signup();
   getAccount = new GetAccount();
   requestRide = new RequestRide();
