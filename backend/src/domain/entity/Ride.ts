@@ -13,7 +13,7 @@ export default class Ride {
   private status: RideStatus;
   private date: Date;
 
-  constructor (rideId: string, passengerId: string, fromLat: number, fromLong: number, toLat: number, toLong: number, status: string, date: Date, driverId: string = "") {
+  constructor (rideId: string, passengerId: string, fromLat: number, fromLong: number, toLat: number, toLong: number, status: string, date: Date, driverId: string = "", private distance: number = 0, private fare: number = 0) {
       this.rideId = new UUID(rideId);
       this.passengerId = new UUID(passengerId);
       this.from = new Coord(fromLat, fromLong);
@@ -27,7 +27,10 @@ export default class Ride {
     const uuid = UUID.create();
     const status = "requested"; 
     const date = new Date();
-    return new Ride(uuid.getValue(), passengerId, fromLat, fromLong, toLat, toLong, status, date, "");
+    const driveId = ""
+    const distance = 0;
+    const fare = 0;
+    return new Ride(uuid.getValue(), passengerId, fromLat, fromLong, toLat, toLong, status, date, driveId, distance, fare);
   }
 
   getRideId () {
@@ -71,13 +74,18 @@ export default class Ride {
     return this.date;
   }
 
-  getDistance (positions: Position[]) {
-    let distance = 0;
-    for (const [index, position] of positions.entries()) {
-      const nextPosition = positions[index + 1];
-      if (!nextPosition) continue;
-      distance += DistanceCalculator.calculate(position.coord, nextPosition.coord);
-    }
-    return distance;
+  finish (positions: Position[]) {
+    const distance = DistanceCalculator.calculatedByPositions(positions);
+    this.distance = distance;
+    this.fare = distance * 2.1;
+    this.status.finish();
+  }
+
+  getFare () {
+    return this.fare;
+  }
+
+  getDistance () {
+    return this.distance;
   }
 }
