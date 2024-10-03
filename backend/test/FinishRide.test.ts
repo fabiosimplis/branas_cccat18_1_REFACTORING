@@ -2,14 +2,17 @@
 
 import AcceptRide from "../src/application/usecases/AcceptRide";
 import FinishRide from "../src/application/usecases/FinishRide";
+import GenerateInvoice from "../src/application/usecases/GenerateInvoice";
 import GetAccount from "../src/application/usecases/GetAccount";
 import GetRide from "../src/application/usecases/GetRide";
+import ProcessPayment from "../src/application/usecases/ProcessPayment";
 import RequestRide from "../src/application/usecases/RequestRide";
 import Signup from "../src/application/usecases/Signup";
 import StartRide from "../src/application/usecases/StartRide";
 import UpdatePosition from "../src/application/usecases/UpdatePosition";
 import { PgPromiseAdapter } from "../src/infra/database/DataBaseConnection";
 import { Registry } from "../src/infra/DI/DI";
+import Mediator from "../src/infra/mediator/Mediator";
 import { AccountRepositoryDatabase } from "../src/infra/Repository/AccountRepository";
 import { PositionRepositoryDatebase } from "../src/infra/Repository/PositionRepository";
 import { RideRepositoryDataBase } from "../src/infra/Repository/RideRepository";
@@ -24,7 +27,15 @@ let updatePosition: UpdatePosition;
 let finishRide: FinishRide;
 
 beforeEach(() => {
+  const processPayment = new ProcessPayment();
+  const generateInvoice = new GenerateInvoice();
+  const mediator  = new Mediator();
+  mediator.register("rideCompleted", async function (event: any) {
+    await processPayment.execute(event);
+    await generateInvoice.execute(event);
+  });
   Registry.getInstance().provide("databaseConnection", new PgPromiseAdapter());
+  Registry.getInstance().provide("mediator", mediator);
   Registry.getInstance().provide("accountRepository", new AccountRepositoryDatabase());
   Registry.getInstance().provide("rideRepository", new RideRepositoryDataBase());
   Registry.getInstance().provide("positionRepository", new PositionRepositoryDatebase());
