@@ -2,8 +2,9 @@ import CarPlate from "../vo/CarPlate";
 import Cpf from "../vo/Cpf";
 import Email from "../vo/Email";
 import Name from "../vo/Name";
-import Password from "../vo/Password";
+import Password, { PasswordFactory } from "../vo/Password";
 import UUID from "../vo/UUID";
+import crypto from "crypto";
 
 // Design Pattern - Facade, expoe um interface mais simples, delegando a complexidade interna para outros responsáveis
 // Entity Clean Architecture
@@ -16,19 +17,20 @@ export default class Account {
   private carPlate?: CarPlate;
   private password: Password;
   
-  constructor (accountId: string, name: string, email: string, cpf: string, carPlate: string, password: string, readonly isPassenger: boolean, readonly isDriver: boolean){
+  constructor (accountId: string, name: string, email: string, cpf: string, carPlate: string, password: string, readonly isPassenger: boolean, readonly isDriver: boolean, passwordType: string = "textplain"){
     this.accountId = new UUID(accountId);
     this.name = new Name(name);
     this.email = new Email(email);
     this.cpf = new Cpf(cpf);
     if (isDriver) this.carPlate = new CarPlate(carPlate);
-    this.password = new Password(password);
+    this.password = PasswordFactory.restore(passwordType, password);
   }
 
   // Padrão static factory method
-  static create (name: string, email: string, cpf: string, carPlate: string, password: string, isPassenger: boolean, isDriver: boolean) {
+  static create (name: string, email: string, cpf: string, carPlate: string, password: string, isPassenger: boolean, isDriver: boolean, passwordType: string = "paintext") {
     const accountId = UUID.create();
-    return new Account(accountId.getValue(), name, email, cpf, carPlate, password, isPassenger, isDriver);
+    const passwordValue = PasswordFactory.create(passwordType, password);
+    return new Account(accountId.getValue(), name, email, cpf, carPlate, passwordValue.getValue(), isPassenger, isDriver, passwordValue.type);
   }
 
   getAccountId(){
@@ -55,7 +57,7 @@ export default class Account {
     return this.password.getValue();
   }
 
-  changePassword ( newPassword: string) {
-    this.password = new Password(newPassword);
+  getPasswordType () {
+    return this.password.type;
   }
 }

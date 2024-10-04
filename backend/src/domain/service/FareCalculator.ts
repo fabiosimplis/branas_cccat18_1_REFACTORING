@@ -1,3 +1,4 @@
+// Strategy
 export default interface FareCalculator {
   calculate (distance: number): number;
 }
