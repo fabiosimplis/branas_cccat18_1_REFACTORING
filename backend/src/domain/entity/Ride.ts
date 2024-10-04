@@ -5,6 +5,7 @@ import RideStatus, { RideStatusFactory } from "../vo/RideStatus";
 import DistanceCalculator from "../service/DistanceCalculator";
 import RideCompletedEvent from "../event/RideCompletedEvent";
 import Mediator from "../../infra/mediator/Mediator";
+import { FareCalculatorFactory } from "../service/FareCalculator";
 
 // Obsever 1-N
 export default class Ride extends Mediator {
@@ -79,9 +80,15 @@ export default class Ride extends Mediator {
   }
 
   finish (positions: Position[]) {
-    const distance = DistanceCalculator.calculatedByPositions(positions);
-    this.distance = distance;
-    this.fare = distance * 2.1;
+    this.distance = 0;
+    this.fare = 0;
+    for (const [index, position] of positions.entries()) {
+      const nextPosition = positions[index + 1];
+      if (!nextPosition) continue;
+      const distance = DistanceCalculator.calculate(position.coord, nextPosition.coord);
+      this.distance += distance;
+      this.fare += FareCalculatorFactory.create(position.date).calculate(distance);
+    }
     this.status.finish();
     const event = new RideCompletedEvent(this.getRideId(), this.getFare());
     this.notify(RideCompletedEvent.eventName, event);

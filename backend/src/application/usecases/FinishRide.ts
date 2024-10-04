@@ -6,7 +6,7 @@ import PositionRepository from "../../infra/Repository/PositionRepository";
 import RideRepository from "../../infra/Repository/RideRepository";
 
 //Use Case
-export default class FinishRide{
+export default class FinishRide {
   @inject("rideRepository")
   rideRepository!: RideRepository;
   @inject("positionRepository")
