@@ -4,7 +4,6 @@ import Email from "../vo/Email";
 import Name from "../vo/Name";
 import Password, { PasswordFactory } from "../vo/Password";
 import UUID from "../vo/UUID";
-import crypto from "crypto";
 
 // Design Pattern - Facade, expoe um interface mais simples, delegando a complexidade interna para outros responsáveis
 // Entity Clean Architecture

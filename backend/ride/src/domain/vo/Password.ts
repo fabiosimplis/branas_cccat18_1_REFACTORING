@@ -64,7 +64,8 @@ export class PasswordFactory {
   }
   
   static create ( type: string, password: string) {
-    return PasswordFactory.build(type, password, "create");
+    let pass = PasswordFactory.build(type, password, "create");
+    return pass;
   }
   static restore ( type: string, password: string) {
     return PasswordFactory.build(type, password, "restore");

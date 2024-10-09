@@ -14,7 +14,6 @@ export default class AccountController {
   @inject("getAccount")
   getAccount?: GetAccount;
 
-
   constructor () {
     this.httpServer?.register("post","/signup", async (params: any, body: any) => {
       const input = body;
