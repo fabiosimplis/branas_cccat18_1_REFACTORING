@@ -17,7 +17,7 @@ export default class UpdatePosition {
     const ride = await this.rideRepository?.getRideById(input.rideId);
     if (!ride) throw new Error("Ride does not exist");
     // ride.updatePosition(input.lat, input.long);
-    const position = Position.create(input.rideId, input.lat, input.long);
+    const position = Position.create(input.rideId, input.lat, input.long, input.date);
     await this.positionRepository?.savePosition(position);
   }
 }
@@ -25,6 +25,7 @@ export default class UpdatePosition {
 type Input = {
   rideId: string,
   lat: number,
-  long: number
+  long: number,
+  date: Date
 }
 

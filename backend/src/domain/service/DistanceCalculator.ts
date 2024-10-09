@@ -1,6 +1,7 @@
 import Coord from "../vo/Coord";
+import Position from "../vo/Position";
 
-export default class CalculateDistance {
+export default class DistanceCalculator {
 
   static calculate (from: Coord, to: Coord) {
     const earthRadios = 6371;
@@ -17,5 +18,15 @@ export default class CalculateDistance {
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 -a));
     const distance = earthRadios * c;
     return Math.round(distance);
+  }
+
+  static calculatedByPositions (positions: Position[]) {
+    let distance = 0;
+    for (const [index, position] of positions.entries()) {
+      const nextPosition = positions[index + 1];
+      if (!nextPosition) continue;
+      distance += DistanceCalculator.calculate(position.coord, nextPosition.coord);
+    }
+    return distance;
   }
 }

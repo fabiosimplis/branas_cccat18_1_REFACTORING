@@ -32,6 +32,25 @@ test ("Deve criar a conta de um passageiro", async function () {
   expect(outputGetAccount.isPassenger).toBe(input.isPassenger);
 });
 
+test.only ("Deve criar a conta de um passageiro em md5", async function () {
+  const input = {
+    name: "John Doe",
+    email: `john.doe${Math.random()}@gmail.com`,
+    cpf: "97456321558",
+    password: "123456",
+    isPassenger: true,
+    passwordType: "md5"
+  };
+  const outputSignup = await signup.execute(input);
+  expect(outputSignup.accountId).toBeDefined();
+  const outputGetAccount = await getAccount.execute(outputSignup.accountId);
+  expect(outputGetAccount.name).toBe(input.name);
+  expect(outputGetAccount.email).toBe(input.email);
+  expect(outputGetAccount.cpf).toBe(input.cpf);
+  expect(outputGetAccount.password).toBe("e10adc3949ba59abbe56e057f20f883e");
+  expect(outputGetAccount.isPassenger).toBe(input.isPassenger);
+});
+
 test ("Não deve criar a conta de um passageiro com nome inválido", async function () {
   const input = {
     name: "John",
