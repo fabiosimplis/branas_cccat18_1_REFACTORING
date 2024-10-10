@@ -1,3 +1,4 @@
+import Transaction from "../../domain/Transaction";
 import DatabaseConnection from "../database/DataBaseConnection";
 
 export default class ORM {
@@ -52,6 +53,14 @@ export class TransactionModel extends Model {
     this.amount = amount;
     this.date = date;
     this.status = status;
+  }
+
+  static fromAggregate (aggregate: Transaction) {
+    return new TransactionModel(aggregate.transactionId.getValue(), aggregate.rideId.getValue(), aggregate.amount, aggregate.date, aggregate.getStatus())
+  }
+
+  toAggregate () {
+    return new Transaction(this.transactionId, this.rideId, this.amount, this.date, this.status);
   }
 }
 
