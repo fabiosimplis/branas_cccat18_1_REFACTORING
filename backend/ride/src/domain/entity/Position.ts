@@ -1,5 +1,5 @@
-import Coord from "./Coord";
-import UUID from "./UUID";
+import Coord from "../vo/Coord";
+import UUID from "../vo/UUID";
 
 // Aggregate
 export default class Position {

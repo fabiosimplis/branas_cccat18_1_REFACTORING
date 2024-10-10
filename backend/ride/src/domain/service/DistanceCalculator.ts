@@ -1,5 +1,5 @@
 import Coord from "../vo/Coord";
-import Position from "../vo/Position";
+import Position from "../entity/Position";
 
 export default class DistanceCalculator {
 

@@ -1,7 +1,7 @@
 import Ride from "../../domain/entity/Ride";
 import DatabaseConnection from "../database/DataBaseConnection";
 import { inject } from "../DI/DI";
-import Position from "../../domain/vo/Position";
+import Position from "../../domain/entity/Position";
 import Logger from "../logger/Logger";
 
 export default interface RideRepository {

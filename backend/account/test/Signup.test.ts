@@ -32,7 +32,7 @@ test ("Deve criar a conta de um passageiro", async function () {
   expect(outputGetAccount.isPassenger).toBe(input.isPassenger);
 });
 
-test.only ("Deve criar a conta de um passageiro em md5", async function () {
+test ("Deve criar a conta de um passageiro em md5", async function () {
   const input = {
     name: "John Doe",
     email: `john.doe${Math.random()}@gmail.com`,

@@ -1,13 +1,12 @@
+import Ride from "../../domain/entity/Ride";
 import { inject } from "../../infra/DI/DI";
-import AccountRepository from "../../infra/Repository/AccountRepository";
-import Ride from "../../domain/entity/Ride"
+import AccountGateway from "../../infra/gateway/AccountGateway";
 import RideRepository from "../../infra/Repository/RideRepository";
 
 //Use Case
 export default class RequestRide {
-  @inject("accountRepository")
-  accountRepository?: AccountRepository;
-
+  @inject("accountGateway")
+  accountGateway?: AccountGateway;
   @inject("rideRepository")
   rideRepository?: RideRepository;
 
@@ -15,7 +14,7 @@ export default class RequestRide {
   async execute(input: Input): Promise<Output>{
 
     // Orquestrando recursos
-    const account = await this.accountRepository?.getAccountById(input.passengerId);
+    const account = await this.accountGateway?.getAccountById(input.passengerId);
     if(!account) throw new Error("Account does not exist");
     if(!account.isPassenger) throw new Error("Account must be from a passenger");
     const ride = Ride.create(input.passengerId, input.fromLat, input.fromLong, input.toLat, input.toLong);

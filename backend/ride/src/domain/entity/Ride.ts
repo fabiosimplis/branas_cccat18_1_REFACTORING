@@ -1,6 +1,6 @@
 import UUID from "../vo/UUID";
 import Coord from "../vo/Coord"
-import Position from "../vo/Position"
+import Position from "./Position"
 import RideStatus, { RideStatusFactory } from "../vo/RideStatus";
 import DistanceCalculator from "../service/DistanceCalculator";
 import RideCompletedEvent from "../event/RideCompletedEvent";

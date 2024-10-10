@@ -1,33 +1,29 @@
 // Use case driven development - começar pelo teste de integração
 
 import AcceptRide from "../src/application/usecases/AcceptRide";
-import GetAccount from "../src/application/usecases/GetAccount";
 import GetRide from "../src/application/usecases/GetRide";
 import RequestRide from "../src/application/usecases/RequestRide";
-import Signup from "../src/application/usecases/Signup";
 import StartRide from "../src/application/usecases/StartRide";
 import UpdatePosition from "../src/application/usecases/UpdatePosition";
 import { PgPromiseAdapter } from "../src/infra/database/DataBaseConnection";
 import { Registry } from "../src/infra/DI/DI";
-import { AccountRepositoryDatabase } from "../src/infra/Repository/AccountRepository";
+import AccountGateway from "../src/infra/gateway/AccountGateway";
 import { PositionRepositoryDatebase } from "../src/infra/Repository/PositionRepository";
 import { RideRepositoryDataBase } from "../src/infra/Repository/RideRepository";
 
-let signup: Signup;
-let getAccount: GetAccount;
 let requestRide: RequestRide;
 let getRide: GetRide;
 let acceptRide: AcceptRide;
 let startRide: StartRide;
 let updatePosition: UpdatePosition;
+let accountGateway: AccountGateway;
 
 beforeEach(() => {
+  accountGateway = new AccountGateway();
+  Registry.getInstance().provide("accountGateway", accountGateway);
   Registry.getInstance().provide("databaseConnection", new PgPromiseAdapter());
-  Registry.getInstance().provide("accountRepository", new AccountRepositoryDatabase());
   Registry.getInstance().provide("rideRepository", new RideRepositoryDataBase());
   Registry.getInstance().provide("positionRepository", new PositionRepositoryDatebase());
-  signup = new Signup();
-  getAccount = new GetAccount();
   requestRide = new RequestRide();
   getRide = new GetRide();
   acceptRide = new AcceptRide();
@@ -43,7 +39,7 @@ test ("Deve atualizar a posição de uma corrida", async function () {
     password: "123456",
     isPassenger: true
   };
-  const outputSignupPassenger = await signup.execute(inputPassenger);
+  const outputSignupPassenger = await accountGateway.signup(inputPassenger);
   const inputDriver = {
     name: "John Doe",
     email: `john.doe${Math.random()}@gmail.com`,
@@ -52,7 +48,7 @@ test ("Deve atualizar a posição de uma corrida", async function () {
     carPlate: "BKL1660",
     isDriver: true
   };
-  const outputSignupDriver = await signup.execute(inputDriver);
+  const outputSignupDriver = await accountGateway.signup(inputDriver);
   const inputRequestRide = {
     passengerId: outputSignupPassenger.accountId,
     fromLat: -27.584905257808835,

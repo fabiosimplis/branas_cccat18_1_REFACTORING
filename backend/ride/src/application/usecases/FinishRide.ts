@@ -1,7 +1,6 @@
 import RideCompletedEvent from "../../domain/event/RideCompletedEvent";
-import Position from "../../domain/vo/Position";
 import { inject } from "../../infra/DI/DI";
-import Mediator from "../../infra/mediator/Mediator";
+import PaymentGateway from "../../infra/gateway/PaymentGateway";
 import PositionRepository from "../../infra/Repository/PositionRepository";
 import RideRepository from "../../infra/Repository/RideRepository";
 
@@ -11,8 +10,8 @@ export default class FinishRide {
   rideRepository!: RideRepository;
   @inject("positionRepository")
   positionRepository!: PositionRepository;
-  @inject("mediator")
-  mediator!: Mediator;
+  @inject("paymentGateway")
+  paymentGateway!: PaymentGateway;
 
   // Dependency Inversion Principle - Dependency Injection
   async execute(input: Input): Promise<void>{
@@ -21,7 +20,7 @@ export default class FinishRide {
     if (!ride) throw new Error("Ride does not exist");
     ride.register(RideCompletedEvent.eventName, async (event: RideCompletedEvent) => {
       await this.rideRepository.updateRide(ride);
-      await this.mediator.notify("rideCompleted", event);
+      await this.paymentGateway.processPayment(event);
     });
     const positions = await this.positionRepository?.getPositionsByRideId(input.rideId);
     ride.finish(positions);
