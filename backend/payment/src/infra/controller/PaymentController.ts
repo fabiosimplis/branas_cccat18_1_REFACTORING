@@ -1,6 +1,6 @@
 
 import ProcessPayment from "../../application/usecases/ProcessPayment";
-import { inject } from "../DI/DI";
+import { inject } from "../di/DI";
 import HttpServer from "../http/HttpServer";
 
 
