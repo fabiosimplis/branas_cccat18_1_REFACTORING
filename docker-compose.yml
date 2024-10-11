@@ -26,3 +26,8 @@ services:
       - "5435:5432"
     volumes:
       - ./create_payment.sql:/docker-entrypoint-initdb.d/init.sql
+  rabitmq:
+    image: rabbitmq:3-management
+    ports:
+      - 5672:5672
+      - 15672:15672
