@@ -1,19 +1,29 @@
+import { Registry } from "./infra/di/DI";
+import { PgPromiseAdapter } from "./infra/database/DataBaseConnection";
+import { ExpressAdapter } from "./infra/http/HttpServer";
 import ProcessPayment from "./application/usecases/ProcessPayment";
 import PaymentController from "./infra/controller/PaymentController";
-import { PgPromiseAdapter } from "./infra/database/DataBaseConnection";
-import { Registry } from "./infra/di/DI";
-import { CieloProcessor, PJBankProcessor } from "./infra/fallback/PaymentProcessor";
-import CieloGateway from "./infra/gateway/CieloGateway";
-import PJBankGateway from "./infra/gateway/PJBankGateway";
-import { ExpressAdapter } from "./infra/http/HttpServer";
+import { PaymentProcessorFactory } from "./infra/fallback/PaymentProcessor";
+import { RabbitMQAdapter } from "./infra/queue/Queue";
+import QueueController from "./infra/controller/QueueController";
+import { TransactionRepositoryORM } from "./infra/Repository/TransactionRepository";
+import ORM from "./infra/orm/ORM";
 
-const httpServer = new ExpressAdapter();
-const cieloProcessor = new CieloProcessor();
-const pjBankProcessor = new PJBankProcessor(cieloProcessor);
-Registry.getInstance().provide("httpServer", httpServer);
-Registry.getInstance().provide("databaseConnection", new PgPromiseAdapter());
-//Registry.getInstance().provide("paymentGateway", new CieloGateway());
-Registry.getInstance().provide("paymentProcessor", pjBankProcessor);
-Registry.getInstance().provide("processPayment", new ProcessPayment());
-Registry.getInstance().provide("accountController", new PaymentController());
-httpServer.listen(3002);
+async function main() {
+  
+  const httpServer = new ExpressAdapter();
+  const queue = new RabbitMQAdapter();
+  await queue.connect();
+  Registry.getInstance().provide("httpServer", httpServer);
+  Registry.getInstance().provide("queue", queue);
+  Registry.getInstance().provide("databaseConnection", PgPromiseAdapter.getInstance().getConnection());
+  Registry.getInstance().provide("paymentProcessor", PaymentProcessorFactory.create());
+  Registry.getInstance().provide("orm", new ORM(PgPromiseAdapter.getInstance().getConnection()));
+  Registry.getInstance().provide("transactionRepository", new TransactionRepositoryORM());
+  Registry.getInstance().provide("processPayment", new ProcessPayment());
+  Registry.getInstance().provide("accountController", new PaymentController());
+  new QueueController();
+  httpServer.listen(3002);
+}
+
+main();

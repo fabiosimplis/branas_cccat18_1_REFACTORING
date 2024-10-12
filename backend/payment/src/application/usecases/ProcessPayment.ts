@@ -28,7 +28,7 @@ export default class ProcessPayment {
         transaction.pay();
         await this.transactionRepository.saveTransaction(transaction);
         console.log("pago com sucesso");
-        console.log(outputCreateTransaction);
+        //console.log(outputCreateTransaction);
       }
     } catch (e: any) {
       console.log("ERROR:", e.message);

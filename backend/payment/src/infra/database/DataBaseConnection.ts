@@ -6,10 +6,22 @@ export default interface DatabaseConnection {
 }
 
 export class PgPromiseAdapter implements DatabaseConnection {
+  private static instance: PgPromiseAdapter;
   connection: any;
 
   constructor() {
     this.connection = pgp()("postgres://postgres:123456@localhost:5435/app");
+  }
+
+  public static getInstance(): PgPromiseAdapter {
+    if (!PgPromiseAdapter.instance) {
+        PgPromiseAdapter.instance = new PgPromiseAdapter();
+      }
+    return PgPromiseAdapter.instance;
+  }
+
+  getConnection() {
+    return this.connection;
   }
 
   query(statment: string, params: any): Promise<any> {
