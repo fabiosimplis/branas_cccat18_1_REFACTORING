@@ -10,7 +10,17 @@ async function main () {
   channel.consume("rideCompleted.processPayment", async function (message: any) {
     const input = JSON.parse(message.content.toString());
     console.log(input);
-    channel.ack(message);
+    // channel.ack(message);
+  });
+  channel.consume("rideCompleted.generateInvoice", async function (message: any) {
+    const input = JSON.parse(message.content.toString());
+    console.log(input);
+    // channel.ack(message);
+  });
+  channel.consume("rideCompleted.sendReceipt", async function (message: any) {
+    const input = JSON.parse(message.content.toString());
+    console.log(input);
+    // channel.ack(message);
   });
 }
 
