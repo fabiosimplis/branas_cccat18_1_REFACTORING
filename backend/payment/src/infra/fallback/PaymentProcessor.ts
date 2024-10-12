@@ -41,5 +41,12 @@ export class CieloProcessor implements PaymentProcessor {
       return this.next?.processPayment(input);
     }
   }
+}
 
+export class PaymentProcessorFactory {
+	static create (): PaymentProcessor {
+		const cieloProcessor = new CieloProcessor();
+		const pjBankProcessor = new PJBankProcessor(cieloProcessor);
+		return pjBankProcessor;
+	}
 }
